@@ -85,5 +85,34 @@ This is the place for you to write reflections:
 ### Mandatory (Subscriber) Reflections
 
 #### Reflection Subscriber-1
+1. In this tutorial, we used RwLock<> to synchronise the use of Vec of Notifications. Explain why
+   it is necessary for this case, and explain why we do not use Mutex<> instead?
+- Perlu sinkronisasi karena variabel global (Vec<Notification>) akan diakses oleh banyak thread secara bersamaan, sehingga sinkronisasi  bertujuan mencegah terjadinya data race saat ada thread yang mencoba membaca dan menulis di saat yang sama.
+- Mutex hanya mengizinkan satu thread untuk mengakses data, baik untuk membaca maupun menulis. RwLock (Read-Write Lock) mengizinkan banyak thread untuk membaca data secara bersamaan, namun hanya satu thread yang bisa menulis. Karena sistem notifikasi akan jauh lebih sering membaca daftar notifikasi daripada menambahkannya, RwLock jauh lebih efisien untuk perfprma dibandingkan Mutex.
+
+2. In this tutorial, we used lazy_static external library to define Vec and DashMap as a “static”
+   variable. Compared to Java where we can mutate the content of a static variable via a
+   static function, why did not Rust allow us to do so?
+- Di Rust, membiarkan variabel statis global dapat dimutasi secara bebas oleh banyak thread dari mana saja sangat rentan terhadap data race
+
+
 
 #### Reflection Subscriber-2
+Here are the questions for this reflection:
+1. Have you explored things outside of the steps in the tutorial, for example: src/lib.rs? If not,
+   explain why you did not do so. If yes, explain things that you have learned from those other
+   parts of code.
+    - Saya tidak explore yang di luar tutotial, karena saya berfokus pada apa yang diajarkan di setiap langkah tutorial.
+   
+2. Since you have completed the tutorial by now and have tried to test your notification system
+   by spawning multiple instances of Receiver, explain how Observer pattern eases you to plug
+   in more subscribers. How about spawning more than one instance of Main app, will it still be
+   easy enough to add to the system?
+    - Menambah subscriber mudah karena main app tidak perlu mengubah kode intinya setiap kali ada subscriber baru (hanya perlu menambahkan URL subscriber ke dalam list-nys)
+    - Jika ada lebih dari 1 instance main app, akan lebih sussah ditambah ke sistem. Karena daftar subscriber saat ini disimpan di memori lokal masing-masing instans Main app, membuat instans baru berarti instans tersebut tidak akan membagikan memori (state) yang sama.
+   
+3. Have you tried to make your own Tests, or enhance documentation on your Postman
+   collection? If you have tried those features, tell us whether it is useful for your work (it can be
+   your tutorial work or your Group Project).
+   - Ya, tests otomatis membantu saya memverifikasi fungsionalitas API dengan cepat (misal memastikan status code 200 OK ) setiap kali ada perubahan kode, dan dokumentasi Postman sangat memudahkan kolaborasi dalam tim agar anggota lain tahu persis endpoint, parameter, dan payload apa yang harus dikirim.
+
